@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster de Proyecto - EcoBottles S.A.</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de Tailwind y fuente Inter -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'eco-green': '#00A86B', // Verde principal de sostenibilidad
+                        'ia-blue': '#107EBC',    // Azul para IA y tecnología
+                        'background-light': '#F7F9FC',
+                        'text-dark': '#1F2937',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        // Se mantiene una sombra ligera, pero no la '4xl' para evitar el efecto flotante
+                        'default-shadow': '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* AJUSTE CLAVE PARA EFECTO "PÁGINA COMPLETA": */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; 
+            background-color: #ffffff; 
+        }
+        
+        body {
+            display: block;
+            min-height: 100vh;
+            padding: 1.5rem; 
+        }
+
+        /* Contenedor principal: ahora es más como un contenedor de ancho limitado que respeta los bordes */
+        .main-content-container {
+            max-width: 1400px; 
+            width: 100%;
+            margin: 0 auto; 
+            background-color: white; 
+            box-shadow: none; 
+            padding: 0; 
+        }
+        
+        /* Estilos específicos (Mantenidos) */
+        .section-header {
+            border-left-width: 4px;
+            border-left-style: solid;
+            padding-left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .detail-card {
+            background-color: #ffffff;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s ease;
+        }
+        .detail-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .ribbon-container {
+            display: flex;
+            flex-wrap: nowrap; 
+            overflow-x: auto; 
+            justify-content: center; 
+            gap: 0.6rem; 
+            padding: 0.75rem; 
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .ribbon-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 0.9rem; 
+            border-radius: 9999px; 
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem; 
+            flex-shrink: 0; 
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s, border-color 0.3s; 
+            cursor: pointer;
+        }
+        .ribbon-item:hover {
+            transform: translateY(-2px); 
+        }
+        .ribbon-blue {
+            background-color: #DBEAFE; 
+            color: #1E40AF; 
+            border: 1px solid #93C5FD; 
+        }
+        .ribbon-green {
+            background-color: #D1FAE5; 
+            color: #065F46; 
+            border: 1px solid #6EE7B7; 
+        }
+        .ribbon-active {
+            background-color: #107EBC; 
+            color: white;
+            border-color: #107EBC;
+            box-shadow: 0 4px 8px rgba(16, 126, 188, 0.4); 
+            transform: none !important;
+        }
+        .ribbon-active:hover {
+            background-color: #0c67a0; 
+        }
+
+        @media (min-width: 768px) {
+            .main-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans text-text-dark">
+
+    <!-- Lógica de JavaScript para la interactividad del Ribbon y la nueva pantalla de inicio -->
+    <script>
+        function showSection(sectionId, element) {
+            // Ocultar todas las secciones del contenido principal
+            document.querySelectorAll('.project-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Remover la clase activa de todos los botones del ribbon
+            document.querySelectorAll('.ribbon-item').forEach(item => {
+                item.classList.remove('ribbon-active');
+            });
+            
+            // Mostrar la sección seleccionada
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            } else {
+                console.error('Sección no encontrada: ' + sectionId);
+            }
+
+            // Marcar el botón del ribbon como activo
+            if (element) {
+                element.classList.add('ribbon-active');
+            }
+        }
+
+        function showStartPage() {
+            // Oculta el contenido principal (póster)
+            document.getElementById('poster-content-wrapper').classList.add('hidden');
+            // Muestra la pantalla de inicio
+            document.getElementById('start-page').classList.remove('hidden');
+        }
+
+        function showPoster() {
+            // Oculta la pantalla de inicio
+            document.getElementById('start-page').classList.add('hidden');
+            // Muestra el contenido principal (póster)
+            document.getElementById('poster-content-wrapper').classList.remove('hidden');
+            
+            // Inicializa el contenido mostrando la primera sección (Problemática)
+            // Se asume que el primer elemento del ribbon es la problemática.
+            showSection('problematica-content', document.querySelector('[data-section="problematica-content"]'));
+        }
+
+        // Inicializar: El contenido principal está oculto por defecto, solo se muestra la página de inicio.
+        window.onload = function() {
+            // Asegurarse de que el contenido principal está oculto al cargar
+            document.getElementById('poster-content-wrapper').classList.add('hidden');
+            document.getElementById('start-page').classList.remove('hidden');
+        };
+    </script>
+
+    <!-- Contenedor Principal de Ancho Limitado -->
+    <div class="main-content-container">
+
+        <!-- ************************************ -->
+        <!-- NUEVA PÁGINA DE INICIO -->
+        <!-- ************************************ -->
+        <div id="start-page" class="flex flex-col items-center justify-center min-h-[70vh] text-center p-8 bg-gray-50 rounded-xl border border-gray-200 shadow-lg">
+            
+            <!-- CONTENIDO EXTRAÍDO DEL HEADER ORIGINAL -->
+            <header class="mb-10">
+                <span class="text-lg sm:text-xl font-semibold text-gray-500 uppercase tracking-widest">Tipo de Proyecto: Investigación</span>
+                <h1 class="text-6xl sm:text-7xl font-extrabold mt-4 text-ia-blue animate-pulse">
+                    ECOBOTTLES S.A.
+                </h1>
+                <p class="text-3xl sm:text-4xl font-light text-eco-green mt-3">
+                    ECO-FRIENDLY PET BOTTLE
+                </p>
+                <p class="text-xl sm:text-2xl font-medium mt-6 text-gray-600 border-t border-b py-2">
+                    Espacio Curricular: Gestión de la Producción e IA
+                </p>
+            </header>
+
+            <!-- BOTÓN PARA COMENZAR -->
+            <button onclick="showPoster()" 
+                    class="px-10 py-4 text-xl font-bold rounded-full text-white bg-ia-blue shadow-lg hover:bg-ia-blue/90 transition transform hover:scale-105 active:scale-95 duration-200 focus:outline-none focus:ring-4 focus:ring-ia-blue/50">
+                Comenzar &rarr;
+            </button>
+        </div>
+
+        <!-- ************************************ -->
+        <!-- CONTENIDO PRINCIPAL (POSTER) - INICIALMENTE OCULTO -->
+        <!-- ************************************ -->
+        <div id="poster-content-wrapper">
+             
+            <!-- HEADER / TÍTULO DEL PROYECTO (Incluye el botón de regreso) -->
+            <header class="text-center mb-6 sm:mb-8 border-b-2 border-eco-green pb-4 relative">
+                <!-- Botón de Volver al Inicio -->
+                <button onclick="showStartPage()"
+                        class="absolute left-0 top-0 px-3 py-1 text-sm font-semibold rounded-full text-ia-blue bg-ia-blue/10 hover:bg-ia-blue/20 transition duration-150 flex items-center shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Inicio
+                </button>
+
+                <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 text-ia-blue">
+                    ECOBOTTLES S.A.
+                </h1>
+
+            </header>
+
+            <!-- CINTA DE OPCIONES (Ribbon) -->
+            <div class="ribbon-container mb-8 rounded-full bg-ia-blue/10 border border-ia-blue/20">
+                <div class="ribbon-item ribbon-blue ribbon-active" onclick="showSection('problematica-content', this)" data-section="problematica-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 7a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
+                    Problemática
+                </div>
+                <div class="ribbon-item ribbon-green" onclick="showSection('objetivos-content', this)" data-section="objetivos-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
+                    Objetivos
+                </div>
+                <div class="ribbon-item ribbon-blue" onclick="showSection('fundamentacion-content', this)" data-section="fundamentacion-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a8 8 0 00-8 8c0 2.062.8 3.945 2.1 5.308l.1.1.1.1C5.7 16.7 7.8 18 10 18s4.3-1.3 5.7-2.5l.1-.1.1-.1c1.363-1.363 2.1-3.246 2.1-5.308a8 8 0 00-8-8zM7 8a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
+                    Fundamentación
+                </div>
+                <div class="ribbon-item ribbon-green" onclick="showSection('conceptual-content', this)" data-section="conceptual-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-8H6a1 1 0 110-2h3V6a1 1 0 112 0v2h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3z" clip-rule="evenodd" /></svg>
+                    IA & Gestión
+                </div>
+                <div class="ribbon-item ribbon-blue" onclick="showSection('acciones-content', this)" data-section="acciones-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zm6 8a1 1 0 01-1 1H5a1 1 0 110-2h10a1 1 0 011 1z" /></svg>
+                    Acciones Clave
+                </div>
+                <div class="ribbon-item ribbon-green" onclick="showSection('producto-content', this)" data-section="producto-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13zM7 13a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13z" clip-rule="evenodd" /></svg>
+                    Producto Final
+                </div>
+                <div class="ribbon-item ribbon-blue" onclick="showSection('resultados-content', this)" data-section="resultados-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-8V6a1 1 0 112 0v2h2a1 1 0 110 2h-2v2a1 1 0 11-2 0v-2H6a1 1 0 110-2h2z" clip-rule="evenodd" /></svg>
+                    Resultados
+                </div>
+                <div class="ribbon-item ribbon-green" onclick="showSection('conclusiones-content', this)" data-section="conclusiones-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    Conclusiones
+                </div>
+            </div>
+            
+            <!-- CONTENIDO INTERACTIVO -->
+            <div id="interactive-content">
+
+                <!-- 1. PROBLEMÁTICA (Inicialmente visible por JS) -->
+                <section id="problematica-content" class="project-section p-5 bg-red-50 rounded-lg shadow-md border border-red-200">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-ia-blue text-ia-blue font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle w-6 h-6"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                        Problemática
+                    </h2>
+                    
+                    <div class="p-3 bg-ia-blue/10 rounded-lg border border-ia-blue/20 mb-4">
+                        <p class="text-gray-900 italic text-base">
+                            La empresa presenta una demanda creciente que supera su capacidad actual de producción.
+                        </p>
+                    </div>
+                    
+                    <ul class="list-disc ml-5 text-gray-900 space-y-1 text-base">
+                        <li>Subutilización de capacidad productiva.</li>
+                        <li>Alto desperdicio de material (5% diario).</li>
+                        <li>Defectos por calidad irregular del PET reciclado.</li>
+                        <li>Layout ineficiente y detección tardía de defectos.</li>
+                        <li>Escasa integración de tecnologías 4.0.</li>
+                    </ul>
+                </section>
+                
+                <!-- 2. OBJETIVOS (General y Específicos) -->
+                <section id="objetivos-content" class="project-section hidden p-5 bg-white rounded-lg shadow-md">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-ia-blue text-ia-blue font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#107EBC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target w-6 h-6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        Objetivo General
+                    </h2>
+                    
+                    <div class="p-3 bg-ia-blue/10 rounded-lg border border-ia-blue/20 mb-4">
+                        <p class="text-lg text-gray-700 font-medium">
+                            Diseñar e implementar un plan de mejora integral.
+                        </p>
+                    </div>
+                    
+                    <h3 class="mt-4 section-header border-eco-green text-eco-green font-bold text-xl mb-3 uppercase">Objetivos Específicos</h3>
+                    <ul class="list-disc ml-5 text-gray-600 space-y-1 text-base">
+                        <li>Análisis de planta y procesos.</li>
+                        <li>Optimización de costos.</li>
+                        <li>Evaluación del desempeño del personal.</li>
+                        <li>Control de calidad de materia prima.</li>
+                        <li>Gestión de inventarios con método ABC.</li>
+                    </ul>
+                </section>
+
+                <!-- 3. FUNDAMENTACIÓN -->
+                <section id="fundamentacion-content" class="project-section hidden p-5 bg-white rounded-lg shadow-md">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-eco-green text-eco-green font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open w-6 h-6"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        Fundamentación
+                    </h2>
+                    <div class="p-3 bg-eco-green/10 rounded-lg border border-eco-green/20 mb-4">
+                        <p class="text-gray-700 text-base leading-relaxed">
+                            EcoBottles S.A. requiere innovar para sostener su competitividad. La aplicación de herramientas de Gestión de Producción e Inteligencia Artificial permite optimizar procesos, reducir desperdicios y fortalecer su sostenibilidad. El proyecto combina teoría y práctica en análisis de procesos, control de gestión, recursos humanos y automatización inteligente.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 4. IA & GESTIÓN (Solo Unidades Conceptuales) -->
+                <section id="conceptual-content" class="project-section hidden space-y-6">
+                     <!-- UNIDADES CONCEPTUALES -->
+                    <div class="p-5 bg-white rounded-lg shadow-lg">
+                        <!-- Ícono integrado en el título -->
+                        <h2 class="section-header border-eco-green text-eco-green font-bold text-xl mb-4 uppercase">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap w-6 h-6"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            Unidades Conceptuales Clave
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <!-- Gestión de la Producción -->
+                            <div>
+                                <h3 class="font-semibold text-ia-blue border-b border-ia-blue/30 pb-1 mb-2">Gestión de la Producción</h3>
+                                <ul class="list-disc ml-5 text-gray-600 text-base space-y-1">
+                                    <li>Diseño de producto, proceso y planta.</li>
+                                    <li>Layout y eficiencia operativa.</li>
+                                    <li>Tablero de comando y control de indicadores.</li>
+                                    <li>Ergonomía y seguridad laboral.</li>
+                                    <li>Mantenimiento preventivo.</li>
+                                </ul>
+                            </div>
+
+                            <!-- IA Aplicada -->
+                            <div>
+                                <h3 class="font-semibold text-ia-blue border-b border-ia-blue/30 pb-1 mb-2">Inteligencia Artificial aplicada</h3>
+                                <ul class="list-disc ml-5 text-gray-600 text-base space-y-1">
+                                    <li>Visión por computadora para control de calidad.</li>
+                                    <li>Árbol de decisión para selección de proveedores.</li>
+                                    <li>Automatización de procesos y mantenimiento predictivo.</li>
+                                    <li>Análisis de riesgos éticos y sociales de la IA.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Sostenibilidad / Inventarios -->
+                            <div>
+                                <h3 class="font-semibold text-eco-green border-b border-eco-green/30 pb-1 mb-2">Sostenibilidad y Gestión</h3>
+                                <ul class="list-disc ml-5 text-gray-600 text-base space-y-1">
+                                    <li>Reducción de desperdicios, Optimización de recursos.</li>
+                                    <li>Formación del personal en tecnologías 4.0.</li>
+                                    <li>Análisis ABC y Matriz de evaluación de proveedores.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. ACCIONES CLAVE (Ahora separada) -->
+                <section id="acciones-content" class="project-section hidden p-5 bg-white rounded-lg shadow-md border-t-4 border-ia-blue">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-ia-blue text-ia-blue font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#107EBC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks w-6 h-6"><path d="m3 16 2 2 4-4"/><path d="m3 12 2 2 4-4"/><path d="M11 5h9"/><path d="M11 9h9"/><path d="M11 13h9"/><path d="M11 17h9"/></svg>
+                        Acciones | Recursos | Tiempo
+                    </h2>
+                    
+                     <!-- APLICACIÓN DEL FONDO SUAVE AL LISTADO COMPLETO -->
+                    <div class="p-3 bg-ia-blue/10 rounded-lg border border-ia-blue/20 mb-4">
+                        <ul class="list-disc ml-5 text-gray-600 space-y-1 text-base">
+                            <li>Relevamiento de datos operativos.</li>
+                            <li>Diagramas de flujo, Pareto e Ishikawa.</li>
+                            <li>Tablero de comando con KPIs.</li>
+                            <li>Evaluación de proveedores con matriz ponderada.</li>
+                            <li>Rediseño de layout con metodología SPL.</li>
+                            <li>Propuesta de IA: visión por computadora, mantenimiento predictivo.</li>
+                            <li>Ergonomía, EPP y Cronograma por semanas.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 6. PRODUCTO FINAL (Ahora separada de Resultados) -->
+                <section id="producto-content" class="project-section hidden p-5 bg-white rounded-lg shadow-lg border-l-4 border-eco-green">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-eco-green text-eco-green font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-check w-6 h-6"><path d="M12.89 1.45l.93.93"/><path d="M2.5 10a.5.5 0 0 1 .5-.5h15.05c1.7 0 2.2 1 1.7 2.6L18 20.98c-1 3-3.6 3-4.5 0L10.5 12.8c-.8-2.3-2.1-3.3-3.9-3.3a.5.5 0 0 0-.5.5v11"/><path d="m10 20 2 2 4-4"/><path d="M12 2.76v3.25"/></svg>
+                        Producto Final
+                    </h2 >
+                    
+                    <div class="p-3 bg-eco-green/10 rounded-lg border border-eco-green/20 mb-4">
+                        <p class="text-gray-700 text-base leading-relaxed font-medium">
+                            Propuesta integral de mejora operativa y tecnológica basada en herramientas de gestión, IA y sostenibilidad:
+                        </p>
+                    </div>
+                    
+                    <ul class="list-disc ml-5 text-gray-600 space-y-1 text-base">
+                        <li>Diagnóstico estructural y funcional de la planta.</li>
+                        <li>Optimización de Layout productivo.</li>
+                        <li>Tablero de comando operativo con indicadores clave.</li>
+                        <li>Matriz de evaluación de proveedores.</li>
+                        <li>Propuesta de aplicación IA integrada.</li>
+                        <li>Informes técnicos documentados.</li>
+                    </ul>
+                </section>
+
+                <!-- 7. RESULTADOS ESPERADOS (Ahora separados) -->
+                <section id="resultados-content" class="project-section hidden p-5 bg-green-50 rounded-lg shadow-md border border-green-200">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-eco-green text-eco-green font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00A86B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-6 h-6"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                        Resultados Esperados
+                    </h2>
+                    
+                    <div class="p-3 bg-eco-green/10 rounded-lg border border-eco-green/20 mb-4">
+                        <p class="text-gray-700 text-sm italic font-medium">
+                            Brindar a EcoBottles S.A. una solución viable, escalable y sustentable que le permita:
+                        </p>
+                    </div>
+                    
+                    <ul class="list-disc ml-5 text-gray-700 space-y-1 text-base font-medium">
+                        <li>Aumentar su eficiencia operativa.</li>
+                        <li>Reducir desperdicios y defectos.</li>
+                        <li>Tomar decisiones basadas en datos.</li>
+                        <li>Integrar tecnologías 4.0 de forma ética y responsable.</li>
+                    </ul>
+                </section>
+
+                <!-- 8. CONCLUSIONES (Ahora separadas) -->
+                <section id="conclusiones-content" class="project-section hidden p-5 bg-white rounded-lg shadow-md border-b-4 border-ia-blue">
+                    <!-- Ícono integrado en el título -->
+                    <h2 class="section-header border-ia-blue text-ia-blue font-bold text-xl mb-3 uppercase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#107EBC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-square w-6 h-6"><polyline points="9 11 12 14 22 4"/><path d="M21 12v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12"/></svg>
+                        Conclusiones
+                    </h2>
+                    <div class="p-3 bg-ia-blue/10 rounded-lg border border-ia-blue/20 mb-4">
+                        <p class="text-gray-700 text-base leading-relaxed font-medium">
+                            EcoBottles puede mejorar su competitividad integrando IA, rediseñando procesos y fortaleciendo la sostenibilidad. La automatización debe ser ética, transparente y centrada en el humano.
+                        </p>
+                    </div>
+                </section>
+
+            </div> <!-- Fin de interactive-content -->
+            
+            <!-- FOOTER / DATOS DEL EQUIPO (Ya existente y bien estructurado) -->
+            <footer class="mt-10 pt-6 border-t-2 border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+                    
+                    <!-- Datos del Curso -->
+                    <div class="w-full md:w-1/3 text-center">
+                        <div class="detail-card p-3 rounded-lg">
+                            <p class="text-sm font-semibold text-gray-500 uppercase">Tecnicatura / Cohorte</p>
+                            <p class="text-lg font-bold text-gray-800">Administración / 2024</p>
+                        </div>
+                    </div>
+
+                    <!-- Docentes -->
+                    <div class="w-full md:w-1/3 text-center md:text-right">
+                        <h3 class="text-xl font-bold text-eco-green">DOCENTES</h3>
+                        <p class="text-lg text-gray-700 font-medium">SALOMÓN YAMIL</p>
+                        <p class="text-lg text-gray-700 font-medium">SIMES ROJAS JULIO</p>
+                    </div>
+
+                </div>
+                
+                <!-- Integrantes - SECCIÓN MEJORADA -->
+                <div class="mt-6 p-4 bg-ia-blue/10 rounded-lg">
+                    <h3 class="text-lg font-bold text-ia-blue mb-4 text-center border-b border-ia-blue/30 pb-2">INTEGRANTES</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+                        <span class="text-base font-semibold text-gray-900 bg-white p-3 rounded-xl detail-card shadow-sm">Cocuche, Alejandro</span>
+                        <span class="text-base font-semibold text-gray-900 bg-white p-3 rounded-xl detail-card shadow-sm">Danderfert, Julio Cesar</span>
+                        <span class="text-base font-semibold text-gray-900 bg-white p-3 rounded-xl detail-card shadow-sm">Murad, Elena Rosa</span>
+                        <span class="text-base font-semibold text-gray-900 bg-white p-3 rounded-xl detail-card shadow-sm">Savid, Verónica</span>
+                        <span class="text-base font-semibold text-gray-900 bg-white p-3 rounded-xl detail-card shadow-sm">Sosa, Micaela del Rosario</span>
+                        <span class="text-base font-semibold text-gray-900 bg-white p-3 rounded-xl detail-card shadow-sm">Uñate, Carina</span>
+                    </div>
+                </div>
+            </footer>
+        </div> <!-- Fin de poster-content-wrapper -->
+        
+    </div>
+
+</body>
+</html>
